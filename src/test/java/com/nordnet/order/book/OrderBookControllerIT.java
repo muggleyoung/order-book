@@ -19,11 +19,37 @@ public class OrderBookControllerIT {
 
     @Test
     public void testCreateOrderBook() throws Exception {
-        String jsonRequest = "{ \"ticker\": \"SAVE\", \"quantity\": 10, \"price\": 100, \"side\": \"buy\", \"currency\": \"USD\" }";
+        String jsonRequest = """
+                {
+                    "ticker": "SAVE",
+                    "quantity": 10,
+                    "price": 100,
+                    "side": "buy",
+                    "currency": "USD"
+                }
+                """;
 
         mockMvc.perform(post("/order-book")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCreateOrderBook_InvalidFields() throws Exception {
+        String jsonRequest = """
+                {
+                    "ticker": "",
+                    "quantity": -5,
+                    "price": 0,
+                    "side": "",
+                    "currency": ""
+                }
+                """;
+
+        mockMvc.perform(post("/order-book")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andExpect(status().isBadRequest()); // Expecting a 400 Bad Request
     }
 }
