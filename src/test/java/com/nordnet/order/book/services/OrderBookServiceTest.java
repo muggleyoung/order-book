@@ -1,6 +1,5 @@
-package nordnet.order.book.controllers;
+package nordnet.order.book.services;
 
-import nordnet.order.book.services.OrderBookService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

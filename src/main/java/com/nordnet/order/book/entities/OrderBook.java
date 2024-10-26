@@ -7,13 +7,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Getter @NoArgsConstructor
+@Getter
+@NoArgsConstructor
 public class OrderBook {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,5 +1,6 @@
 package nordnet.order.book;
 
+import nordnet.order.book.services.OrderBookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -8,14 +9,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderBookControllerIT {
+public class CreateOrderIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private OrderBookService orderBookService;
 
     @Test
     public void testCreateOrderBook() throws Exception {
@@ -32,7 +37,13 @@ public class OrderBookControllerIT {
         mockMvc.perform(post("/order-book")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.ticker").value("SAVE"))
+                .andExpect(jsonPath("$.quantity").value(10))
+                .andExpect(jsonPath("$.price").value(100))
+                .andExpect(jsonPath("$.side").value("buy"))
+                .andExpect(jsonPath("$.currency").value("USD"));
     }
 
     @Test

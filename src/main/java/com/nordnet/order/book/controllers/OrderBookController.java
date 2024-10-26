@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import nordnet.order.book.entities.OrderBook;
 import nordnet.order.book.services.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,9 @@ public class OrderBookController {
     private OrderBookService orderBookService;
 
     @PostMapping
-    public OrderBook createOrderBook(@RequestBody OrderBook orderBook) {
-        return orderBookService.createOrderBook(orderBook);
+    public ResponseEntity<OrderBook> createOrderBook(@RequestBody OrderBook orderBook) {
+        OrderBook createdOrderBook = orderBookService.createOrderBook(orderBook);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrderBook);
     }
 
     // Handle ConstraintViolationException
@@ -30,5 +32,11 @@ public class OrderBookController {
             message.setLength(message.length() - 2);
         }
         return ResponseEntity.badRequest().body(message.toString());
+    }
+
+    // Handle all other exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAllExceptions(Exception ex) {
+        return ResponseEntity.status(500).body("An unexpected error occurred: " + ex.getMessage());
     }
 }
