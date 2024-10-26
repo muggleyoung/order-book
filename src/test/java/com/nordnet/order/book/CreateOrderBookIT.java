@@ -1,6 +1,5 @@
 package nordnet.order.book;
 
-import nordnet.order.book.services.OrderBookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,16 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CreateOrderIT {
+public class CreateOrderBookIT {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private OrderBookService orderBookService;
-
     @Test
-    public void testCreateOrderBook() throws Exception {
+    public void testCreateOrderBook_Success() throws Exception {
         String jsonRequest = """
                 {
                     "ticker": "SAVE",
