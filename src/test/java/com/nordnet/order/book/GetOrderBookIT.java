@@ -33,11 +33,9 @@ public class GetOrderBookIT {
 
     @Test
     public void testGetOrderBookById_Success() throws Exception {
-        // Create an OrderBook and save it to the database
         OrderBook orderBook = new OrderBook("SAVE", 10, 100, "buy", "USD");
         OrderBook savedOrderBook = orderBookRepository.save(orderBook);
 
-        // Perform the GET request
         mockMvc.perform(get("/order-book/" + savedOrderBook.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -51,10 +49,8 @@ public class GetOrderBookIT {
 
     @Test
     public void testGetOrderBookById_NotFound() throws Exception {
-        // Generate a random UUID that doesn't exist in the database
         UUID nonExistentId = UUID.randomUUID();
 
-        // Perform the GET request
         mockMvc.perform(get("/order-book/" + nonExistentId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -62,10 +58,8 @@ public class GetOrderBookIT {
 
     @Test
     public void testGetOrderBookById_BadFormatId() throws Exception {
-        // Generate a random UUID that doesn't exist in the database
         int badFormatId = 123;
 
-        // Perform the GET request
         mockMvc.perform(get("/order-book/" + badFormatId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

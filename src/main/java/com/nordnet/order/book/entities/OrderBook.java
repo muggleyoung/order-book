@@ -31,7 +31,7 @@ public class OrderBook {
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be positive")
     @Column(name = "price", nullable = false)
-    private int price;
+    private double price;
 
     @NotEmpty(message = "Side is required")
     @Column(name = "side", nullable = false)
@@ -52,7 +52,7 @@ public class OrderBook {
 
     public OrderBook(@JsonProperty("ticker") String ticker,
                      @JsonProperty("quantity") int quantity,
-                     @JsonProperty("price") int price,
+                     @JsonProperty("price") double price,
                      @JsonProperty("side") String side,
                      @JsonProperty("currency") String currency) {
         this.ticker = ticker;

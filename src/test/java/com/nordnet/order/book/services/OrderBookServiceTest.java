@@ -1,19 +1,44 @@
 package nordnet.order.book.services;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import nordnet.order.book.entities.OrderBook;
-import org.mockito.InjectMocks;
-
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import nordnet.order.book.entities.OrderBook;
+import nordnet.order.book.model.OrderBookSummary;
+import nordnet.order.book.repositories.OrderBookRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 public class OrderBookServiceTest {
 
+    @Mock
+    private OrderBookRepository orderBookRepository;
+
     @InjectMocks
     private OrderBookService orderBookService;
+
+    private final String ticker = "SAVE";
+    private final String date = "2024-01-01"; // Use a valid date string
+    private final String side = "buy";
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testCreateOrderBook_ValidFields() {
@@ -129,5 +154,60 @@ public class OrderBookServiceTest {
             assertFalse(violations.isEmpty(), "Should have validation errors for all fields");
             assertEquals(5, violations.size()); // Expecting errors for all fields
         }
+    }
+
+    @Test
+    public void testGetOrderBookSummary_Success() {
+        // Arrange
+        List<OrderBook> orderBooks = new ArrayList<>();
+        orderBooks.add(new OrderBook("SAVE", 2, 200, "buy", "USD"));
+        orderBooks.add(new OrderBook("SAVE", 2, 100, "buy", "USD"));
+
+        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(String.class)))
+                .thenReturn(orderBooks);
+
+        // Act
+        OrderBookSummary summary = orderBookService.getOrderBookSummary(ticker, date, side);
+
+        // Assert
+        assertEquals(2, summary.getOrderCount());
+        assertEquals(150.0, summary.getAveragePrice());
+        assertEquals(200.0, summary.getMaxPrice());
+        assertEquals(100.0, summary.getMinPrice());
+    }
+
+    @Test
+    public void testGetOrderBookSummary_NoOrders() {
+        // Arrange
+        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(String.class)))
+                .thenReturn(new ArrayList<>()); // No orders
+
+        // Act
+        OrderBookSummary summary = orderBookService.getOrderBookSummary(ticker, date, side);
+
+        // Assert
+        assertEquals(0, summary.getOrderCount());
+        assertEquals(0.0, summary.getAveragePrice());
+        assertEquals(0.0, summary.getMaxPrice());
+        assertEquals(0.0, summary.getMinPrice());
+    }
+
+    @Test
+    public void testGetOrderBookSummary_SingleOrder() {
+        // Arrange
+        List<OrderBook> orderBooks = new ArrayList<>();
+        orderBooks.add(new OrderBook("SAVE", 5, 150, "buy", "USD"));
+
+        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(), any(), anyString()))
+                .thenReturn(orderBooks);
+
+        // Act
+        OrderBookSummary summary = orderBookService.getOrderBookSummary(ticker, date, side);
+
+        // Assert
+        assertEquals(1, summary.getOrderCount());
+        assertEquals(150.0, summary.getAveragePrice());
+        assertEquals(150.0, summary.getMaxPrice());
+        assertEquals(150.0, summary.getMinPrice());
     }
 }

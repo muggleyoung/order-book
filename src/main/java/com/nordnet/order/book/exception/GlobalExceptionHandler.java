@@ -2,9 +2,12 @@ package nordnet.order.book.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.text.ParseException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,6 +27,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.badRequest().body("Invalid UUID format: " + ex.getValue());
+    }
+
+    // Handle missing request parameters
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
+        String message = String.format("Missing parameter: %s", ex.getParameterName());
+        return ResponseEntity.badRequest().body(message);
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<String> handleParseException(ParseException ex) {
+        return ResponseEntity.badRequest().body("Error while parsing request " + ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
