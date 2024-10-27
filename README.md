@@ -1,1 +1,81 @@
 # order_book
+
+### Developer notes
+
+java version: 21
+
+How to run the application:
+`mvn spring-boot:run`
+
+How to run tests:
+`mvn test`
+
+### Assumptions:
+- Management of tickers is not included, tickers here is a fixed list of enums
+- Support only one currency: USD, no format validation
+- There is no check for possible max quantity for sale or buy
+- All the orderBook history is stored in memory
+- All times are handled as local time, no timezone logic
+- Only one currency is supported, therefore no currency conversion is needed
+
+### API endpoints
+- POST /order-book
+Request example:
+```
+{
+  "ticker": "SAVE",
+  "quantity": 10,
+  "price": 100,
+  "side": "buy",
+  "currency": "USD"
+}
+```
+Response:
+```
+200 OK
+400 Bad Request - if mandatory fields are missing or invalid
+500 Internal Server Error
+```
+
+- GET /order-book/{id}
+Response:
+```
+200 OK
+{
+  "id": 9901f46f-240b-4d65-be6b-fe9b8e1a7a9e,
+  "ticker": "SAVE",
+  "quantity": 10,
+  "price": 100,
+  "side": "buy",
+  "currency": "USD"
+}
+400 Bad Request - if the id is not a valid UUID
+404 Not Found
+500 Internal Server Error
+```
+
+- GET /orders/summaries?ticker=SAVE&date=2021-01-01&side=buy
+Response:
+```
+{
+  "ticker": "SAVE",
+  "date": "2021-01-01",
+  "side": "buy",
+  "averagePrice": 1000,
+  "maxPrice": 1000,
+  "minPrice": 1000,
+  "currency": "USD"
+}
+```
+
+Things to consider later:
+- Generate API documentation
+- Authentication and authorization
+- Rate limiting
+- Logging
+- Separate the DB entity from the domain model
+
+To improve:
+- Unit tests could be cleaner, with less duplication
+- Make ticker and side enums
+- Currency should be handled as standard ISO 4217 currency code
