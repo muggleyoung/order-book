@@ -34,7 +34,7 @@ public class OrderBook {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @NotEmpty(message = "Side is required")
+    @NotNull(message = "Side is required")
     @Column(name = "side", nullable = false)
     private Side side;
 

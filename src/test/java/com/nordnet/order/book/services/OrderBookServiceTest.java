@@ -140,7 +140,7 @@ public class OrderBookServiceTest {
             Validator validator = factory.getValidator();
             var violations = validator.validate(orderBook);
             assertFalse(violations.isEmpty(), "Should have validation errors for all fields");
-            assertEquals(5, violations.size()); // Expecting errors for all fields
+            assertEquals(4, violations.size()); // Expecting errors for all fields
         }
     }
 
