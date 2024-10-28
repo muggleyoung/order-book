@@ -2,6 +2,7 @@ package nordnet.order.book.controllers;
 
 import nordnet.order.book.entities.OrderBook;
 import nordnet.order.book.model.OrderBookSummary;
+import nordnet.order.book.model.Side;
 import nordnet.order.book.services.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class OrderBookController {
             @RequestParam(name = "ticker") String ticker,
             @RequestParam(name = "date") String date,
             @RequestParam(name = "side") String side) throws ParseException {
-        OrderBookSummary summary = orderBookService.getOrderBookSummary(ticker, date, side);
+        OrderBookSummary summary = orderBookService.getOrderBookSummary(ticker, date, Side.valueOf(side.toUpperCase()));
         return ResponseEntity.ok(summary);
     }
 }

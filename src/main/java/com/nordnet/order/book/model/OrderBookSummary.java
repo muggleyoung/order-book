@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class OrderBookSummary {
     private String ticker;
     private String date;
-    private String side;
+    private Side side;
     private int orderCount;
     private double averagePrice;
     private double maxPrice;

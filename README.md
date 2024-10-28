@@ -2,7 +2,8 @@
 
 ### Developer notes
 
-java version: 21
+java version: 17
+maven version: 3.9.9
 
 How to run the application:
 `mvn spring-boot:run`
@@ -25,7 +26,7 @@ Request example:
   "ticker": "SAVE",
   "quantity": 10,
   "price": 100,
-  "side": "buy",
+  "side": "BUY",
   "currency": "USD"
 }
 ```
@@ -45,7 +46,7 @@ Response:
   "ticker": "SAVE",
   "quantity": 10,
   "price": 100,
-  "side": "buy",
+  "side": "BUY",
   "currency": "USD"
 }
 400 Bad Request - if the id is not a valid UUID
@@ -53,13 +54,13 @@ Response:
 500 Internal Server Error
 ```
 
-- GET /orders/summaries?ticker=SAVE&date=2021-01-01&side=buy
+- GET /order-book/summary?ticker=SAVE&date=2021-01-01&side=BUY
 Response:
 ```
 {
   "ticker": "SAVE",
   "date": "2021-01-01",
-  "side": "buy",
+  "side": "BUY",
   "averagePrice": 1000,
   "maxPrice": 1000,
   "minPrice": 1000,
@@ -70,6 +71,7 @@ Response:
 To improve:
 - Unit tests could be cleaner, with less duplication
 - Add more validation of requests
+- Error handling and response messages
 - Make ticker and side enums
 - Price should be its own object, with number and currency
 - Currency should be handled as standard ISO 4217 currency code

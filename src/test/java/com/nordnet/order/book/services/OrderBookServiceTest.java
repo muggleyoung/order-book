@@ -34,7 +34,7 @@ public class OrderBookServiceTest {
 
     private final String ticker = "SAVE";
     private final String date = "2024-01-01"; // Use a valid date string
-    private final String side = "buy";
+    private final Side side = Side.BUY;
 
     @BeforeEach
     public void setUp() {
@@ -151,7 +151,7 @@ public class OrderBookServiceTest {
         orderBooks.add(new OrderBook("SAVE", 2, 200, Side.BUY, "USD"));
         orderBooks.add(new OrderBook("SAVE", 2, 100, Side.BUY, "USD"));
 
-        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(String.class)))
+        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(Side.class)))
                 .thenReturn(orderBooks);
 
         // Act
@@ -167,7 +167,7 @@ public class OrderBookServiceTest {
     @Test
     public void testGetOrderBookSummary_NoOrders() {
         // Arrange
-        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(String.class)))
+        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(Side.class)))
                 .thenReturn(new ArrayList<>()); // No orders
 
         // Act
@@ -186,7 +186,7 @@ public class OrderBookServiceTest {
         List<OrderBook> orderBooks = new ArrayList<>();
         orderBooks.add(new OrderBook("SAVE", 5, 150, Side.BUY, "USD"));
 
-        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(), any(), anyString()))
+        when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(), any(), any(Side.class)))
                 .thenReturn(orderBooks);
 
         // Act

@@ -1,6 +1,7 @@
 package nordnet.order.book.repositories;
 
 import nordnet.order.book.entities.OrderBook;
+import nordnet.order.book.model.Side;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +17,4 @@ public interface OrderBookRepository extends JpaRepository<OrderBook, UUID> {
             @Param("ticker") String ticker,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
-            @Param("side") String side);}
+            @Param("side") Side side);}

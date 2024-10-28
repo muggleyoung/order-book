@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import nordnet.order.book.entities.OrderBook;
 import nordnet.order.book.model.OrderBookSummary;
+import nordnet.order.book.model.Side;
 import nordnet.order.book.repositories.OrderBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class OrderBookService {
         return orderBookRepository.findById(id);
     }
 
-    public OrderBookSummary getOrderBookSummary(String ticker, String date, String side) {
+    public OrderBookSummary getOrderBookSummary(String ticker, String date, Side side) {
         LocalDate localDate = LocalDate.parse(date);
         Date parsedDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         // Calculate the next day's date
@@ -49,7 +50,7 @@ public class OrderBookService {
         return getOrderBookSummary(ticker, date, side, orders);
     }
 
-    private OrderBookSummary getOrderBookSummary(String ticker, String date, String side, List<OrderBook> orderBooks) {
+    private OrderBookSummary getOrderBookSummary(String ticker, String date, Side side, List<OrderBook> orderBooks) {
         double totalQuantity = orderBooks.stream().mapToInt(OrderBook::getQuantity).sum();
         double totalPrice = orderBooks.stream().mapToDouble(order -> order.getPrice() * order.getQuantity()).sum();
         double avgPrice = totalQuantity > 0 ? totalPrice / totalQuantity : 0.0;

@@ -36,6 +36,7 @@ public class OrderBook {
 
     @NotNull(message = "Side is required")
     @Column(name = "side", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Side side;
 
     @NotEmpty(message = "Currency is required")
