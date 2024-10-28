@@ -1,5 +1,6 @@
 package nordnet.order.book;
 
+import nordnet.order.book.model.Side;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +26,7 @@ public class CreateOrderBookIT {
                     "ticker": "SAVE",
                     "quantity": 10,
                     "price": 100,
-                    "side": "buy",
+                    "side": Side.BUY,
                     "currency": "USD"
                 }
                 """;
@@ -38,7 +39,7 @@ public class CreateOrderBookIT {
                 .andExpect(jsonPath("$.ticker").value("SAVE"))
                 .andExpect(jsonPath("$.quantity").value(10))
                 .andExpect(jsonPath("$.price").value(100))
-                .andExpect(jsonPath("$.side").value("buy"))
+                .andExpect(jsonPath("$.side").value(Side.BUY))
                 .andExpect(jsonPath("$.currency").value("USD"));
     }
 

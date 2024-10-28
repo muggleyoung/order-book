@@ -5,6 +5,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import nordnet.order.book.entities.OrderBook;
 import nordnet.order.book.model.OrderBookSummary;
+import nordnet.order.book.model.Side;
 import nordnet.order.book.repositories.OrderBookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_ValidFields() {
-        OrderBook orderBook = new OrderBook("SAVE", 10, 100, "buy", "USD");
+        OrderBook orderBook = new OrderBook("SAVE", 10, 100, Side.BUY, "USD");
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -54,7 +55,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_EmptyTicker() {
-        OrderBook orderBook = new OrderBook("", 10, 100, "buy", "USD");
+        OrderBook orderBook = new OrderBook("", 10, 100, Side.BUY, "USD");
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -67,7 +68,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_NegativeQuantity() {
-        OrderBook orderBook = new OrderBook("SAVE", -5, 100, "buy", "USD");
+        OrderBook orderBook = new OrderBook("SAVE", -5, 100, Side.BUY, "USD");
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -80,7 +81,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_ZeroQuantity() {
-        OrderBook orderBook = new OrderBook("SAVE", 0, 100, "buy", "USD");
+        OrderBook orderBook = new OrderBook("SAVE", 0, 100, Side.BUY, "USD");
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -93,7 +94,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_NegativePrice() {
-        OrderBook orderBook = new OrderBook("SAVE", 10, -50, "buy", "USD");
+        OrderBook orderBook = new OrderBook("SAVE", 10, -50, Side.BUY, "USD");
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -106,7 +107,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_ZeroPrice() {
-        OrderBook orderBook = new OrderBook("SAVE", 10, 0, "buy", "USD");
+        OrderBook orderBook = new OrderBook("SAVE", 10, 0, Side.BUY, "USD");
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -118,21 +119,8 @@ public class OrderBookServiceTest {
     }
 
     @Test
-    public void testCreateOrderBook_EmptySide() {
-        OrderBook orderBook = new OrderBook("SAVE", 10, 100, "", "USD");
-
-        // Validate the orderBook
-        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-            Validator validator = factory.getValidator();
-            var violations = validator.validate(orderBook);
-            assertFalse(violations.isEmpty(), "Should have validation errors for empty side");
-            assertEquals(1, violations.size()); // Expecting error for side
-        }
-    }
-
-    @Test
     public void testCreateOrderBook_EmptyCurrency() {
-        OrderBook orderBook = new OrderBook("SAVE", 10, 100, "buy", ""); // Invalid currency
+        OrderBook orderBook = new OrderBook("SAVE", 10, 100, Side.BUY, ""); // Invalid currency
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -145,7 +133,7 @@ public class OrderBookServiceTest {
 
     @Test
     public void testCreateOrderBook_AllInvalidFields() {
-        OrderBook orderBook = new OrderBook("", -10, -50, "", ""); // Invalid empty fields
+        OrderBook orderBook = new OrderBook("", -10, -50, Side.BUY, ""); // Invalid empty fields
 
         // Validate the orderBook
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
@@ -160,8 +148,8 @@ public class OrderBookServiceTest {
     public void testGetOrderBookSummary_Success() {
         // Arrange
         List<OrderBook> orderBooks = new ArrayList<>();
-        orderBooks.add(new OrderBook("SAVE", 2, 200, "buy", "USD"));
-        orderBooks.add(new OrderBook("SAVE", 2, 100, "buy", "USD"));
+        orderBooks.add(new OrderBook("SAVE", 2, 200, Side.BUY, "USD"));
+        orderBooks.add(new OrderBook("SAVE", 2, 100, Side.BUY, "USD"));
 
         when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(Date.class), any(Date.class), any(String.class)))
                 .thenReturn(orderBooks);
@@ -196,7 +184,7 @@ public class OrderBookServiceTest {
     public void testGetOrderBookSummary_SingleOrder() {
         // Arrange
         List<OrderBook> orderBooks = new ArrayList<>();
-        orderBooks.add(new OrderBook("SAVE", 5, 150, "buy", "USD"));
+        orderBooks.add(new OrderBook("SAVE", 5, 150, Side.BUY, "USD"));
 
         when(orderBookRepository.findAllByTickerAndSideAndDateBetween(anyString(), any(), any(), anyString()))
                 .thenReturn(orderBooks);

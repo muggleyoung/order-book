@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import nordnet.order.book.model.Side;
 
 import java.util.Date;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class OrderBook {
 
     @NotEmpty(message = "Side is required")
     @Column(name = "side", nullable = false)
-    private String side;
+    private Side side;
 
     @NotEmpty(message = "Currency is required")
     @Column(name = "currency", nullable = false)
@@ -53,7 +54,7 @@ public class OrderBook {
     public OrderBook(@JsonProperty("ticker") String ticker,
                      @JsonProperty("quantity") int quantity,
                      @JsonProperty("price") double price,
-                     @JsonProperty("side") String side,
+                     @JsonProperty("side") Side side,
                      @JsonProperty("currency") String currency) {
         this.ticker = ticker;
         this.quantity = quantity;

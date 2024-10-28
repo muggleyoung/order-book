@@ -1,6 +1,7 @@
 package nordnet.order.book;
 
 import nordnet.order.book.entities.OrderBook;
+import nordnet.order.book.model.Side;
 import nordnet.order.book.repositories.OrderBookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class GetOrderBookIT {
 
     @Test
     public void testGetOrderBookById_Success() throws Exception {
-        OrderBook orderBook = new OrderBook("SAVE", 10, 100, "buy", "USD");
+        OrderBook orderBook = new OrderBook("SAVE", 10, 100, Side.BUY, "USD");
         OrderBook savedOrderBook = orderBookRepository.save(orderBook);
 
         mockMvc.perform(get("/order-book/" + savedOrderBook.getId())
@@ -43,7 +44,7 @@ public class GetOrderBookIT {
                 .andExpect(jsonPath("$.ticker").value("SAVE"))
                 .andExpect(jsonPath("$.quantity").value(10))
                 .andExpect(jsonPath("$.price").value(100))
-                .andExpect(jsonPath("$.side").value("buy"))
+                .andExpect(jsonPath("$.side").value(Side.BUY))
                 .andExpect(jsonPath("$.currency").value("USD"));
     }
 

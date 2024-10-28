@@ -1,6 +1,7 @@
 package nordnet.order.book;
 
 import nordnet.order.book.entities.OrderBook;
+import nordnet.order.book.model.Side;
 import nordnet.order.book.repositories.OrderBookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,15 +33,15 @@ public class GetOrderBookSummaryIT {
     public void clearDatabase() {
         orderBookRepository.deleteAll();
         // Create OrderBooks and save them to the database
-        OrderBook orderBook1 = new OrderBook("SAVE", 1, 20, "buy", "USD");
+        OrderBook orderBook1 = new OrderBook("SAVE", 1, 20, Side.BUY, "USD");
         orderBookRepository.save(orderBook1);
-        OrderBook orderBook2 = new OrderBook("SAVE", 1, 10, "sell", "USD");
+        OrderBook orderBook2 = new OrderBook("SAVE", 1, 10, Side.SELL, "USD");
         orderBookRepository.save(orderBook2);
-        OrderBook orderBook3 = new OrderBook("SAVE", 1, 30, "buy", "USD");
+        OrderBook orderBook3 = new OrderBook("SAVE", 1, 30, Side.BUY, "USD");
         orderBookRepository.save(orderBook3);
-        OrderBook orderBook4 = new OrderBook("SAVE", 1, 20, "sell", "USD");
+        OrderBook orderBook4 = new OrderBook("SAVE", 1, 20, Side.SELL, "USD");
         orderBookRepository.save(orderBook4);
-        OrderBook orderBook5 = new OrderBook("GME", 10, 100, "sell", "USD");
+        OrderBook orderBook5 = new OrderBook("GME", 10, 100, Side.SELL, "USD");
         orderBookRepository.save(orderBook5);
     }
 
@@ -51,7 +52,7 @@ public class GetOrderBookSummaryIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ticker").value("SAVE"))
                 .andExpect(jsonPath("$.date").value(today))
-                .andExpect(jsonPath("$.side").value("buy"))
+                .andExpect(jsonPath("$.side").value(Side.BUY))
                 .andExpect(jsonPath("$.orderCount").value(2))
                 .andExpect(jsonPath("$.averagePrice").value(25.0))
                 .andExpect(jsonPath("$.maxPrice").value(30.0))
@@ -78,5 +79,5 @@ public class GetOrderBookSummaryIT {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-    
+
 }
