@@ -12,11 +12,10 @@ How to run tests:
 
 ### Assumptions:
 - Management of tickers is not included, tickers here is a fixed list of enums
-- Support only one currency: USD, no format validation
 - There is no check for possible max quantity for sale or buy
 - All the orderBook history is stored in memory
 - All times are handled as local time, no timezone logic
-- Only one currency is supported, therefore no currency conversion is needed
+- Only one currency("USD") is supported, therefore no currency conversion is needed
 
 ### API endpoints
 - POST /order-book
@@ -68,14 +67,18 @@ Response:
 }
 ```
 
-Things to consider later:
+To improve:
+- Unit tests could be cleaner, with less duplication
+- Add more validation of requests
+- Make ticker and side enums
+- Price should be its own object, with number and currency
+- Currency should be handled as standard ISO 4217 currency code
+
+Nice to think about:
 - Generate API documentation
 - Authentication and authorization
 - Rate limiting
+- Caching
 - Logging
 - Separate the DB entity from the domain model
 
-To improve:
-- Unit tests could be cleaner, with less duplication
-- Make ticker and side enums
-- Currency should be handled as standard ISO 4217 currency code
